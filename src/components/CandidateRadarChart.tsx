@@ -50,9 +50,7 @@ const CandidateRadarChart = ({
       case "agree": return 100;
       case "neutral": return 50;
       case "disagree": return 0;
-      case "no-answer":
-      default:
-        return 25; // Default value for no-answer
+      default: return 25; // Default value for no-answer or undefined
     }
   };
 
@@ -68,13 +66,13 @@ const CandidateRadarChart = ({
       animate={{ opacity: 1 }}
       className="w-full h-full"
     >
-      <Card className="p-4 h-[500px]">
+      <Card className="p-4 h-[500px] bg-white/80 dark:bg-black/80 backdrop-blur-sm relative">
         <h3 className="text-lg font-medium mb-2 text-center">{candidateName}'s Position Profile</h3>
         <ResponsiveContainer width="100%" height="90%">
-          <RadarChart outerRadius="70%" data={chartData}>
-            <PolarGrid />
-            <PolarAngleAxis dataKey="subject" />
-            <PolarRadiusAxis domain={[0, 100]} />
+          <RadarChart outerRadius="80%" data={chartData}>
+            <PolarGrid strokeDasharray="3 3" />
+            <PolarAngleAxis dataKey="subject" tick={{ fill: 'currentColor', fontSize: 12 }} />
+            <PolarRadiusAxis domain={[0, 100]} tick={{ fill: 'currentColor' }} />
             
             <Radar 
               name={candidateName}
@@ -95,9 +93,15 @@ const CandidateRadarChart = ({
             )}
             
             <Tooltip 
-              formatter={(value, name, props) => [`${value}% (${value === 100 ? 'Agree' : value === 50 ? 'Neutral' : 'Disagree'})`, name]}
+              formatter={(value, name, props) => [`${value}% (${value === 100 ? 'Agree' : value === 50 ? 'Neutral' : value === 0 ? 'Disagree' : 'No Answer'})`, name]}
               labelFormatter={(label, data) => {
                 return data[0]?.payload?.fullText || label;
+              }}
+              contentStyle={{ 
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                borderRadius: '0.375rem',
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                padding: '0.75rem'
               }}
             />
           </RadarChart>

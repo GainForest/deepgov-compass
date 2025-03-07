@@ -103,8 +103,8 @@ const Results = () => {
           score = 0.5;
         } else if (
           candidateAnswer === "no-answer" ||
-          userAnswer.answer === "agree" && candidateAnswer === "disagree" ||
-          userAnswer.answer === "disagree" && candidateAnswer === "agree"
+          (userAnswer.answer === "agree" && candidateAnswer === "disagree") ||
+          (userAnswer.answer === "disagree" && candidateAnswer === "agree")
         ) {
           // Complete mismatch
           score = 0;
