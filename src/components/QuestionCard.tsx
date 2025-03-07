@@ -3,8 +3,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
-import { CheckCircle2, XCircle, HelpCircle, MinusCircle } from "lucide-react";
+import { CheckCircle2, XCircle, MinusCircle } from "lucide-react";
 
 type AnswerType = "agree" | "disagree" | "neutral" | "no-answer";
 
@@ -26,27 +25,26 @@ const QuestionCard = ({
   isFirstQuestion,
 }: QuestionCardProps) => {
   const [selectedAnswer, setSelectedAnswer] = useState<AnswerType | null>(null);
-  const [weight, setWeight] = useState<number>(1);
-
+  
   const handleAnswerSelect = (answer: AnswerType) => {
     setSelectedAnswer(answer);
   };
 
-  const handleWeightChange = (value: number[]) => {
-    setWeight(value[0]);
-  };
-
   const handleNext = () => {
     if (selectedAnswer) {
-      onAnswer(selectedAnswer, weight);
+      // Always use weight of 1 as we'll adjust weights at the end
+      onAnswer(selectedAnswer, 1);
     }
+  };
+  
+  const handleSkip = () => {
+    onAnswer("no-answer", 1);
   };
 
   const answerOptions = [
     { value: "agree", icon: CheckCircle2, label: "Agree", color: "bg-emerald-500" },
     { value: "disagree", icon: XCircle, label: "Disagree", color: "bg-rose-500" },
     { value: "neutral", icon: MinusCircle, label: "Neutral", color: "bg-amber-500" },
-    { value: "no-answer", icon: HelpCircle, label: "No Answer", color: "bg-slate-400" },
   ];
 
   return (
@@ -66,7 +64,7 @@ const QuestionCard = ({
         
         <h2 className="text-2xl font-medium mb-8">{questionText}</h2>
         
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+        <div className="grid grid-cols-3 gap-3 mb-8">
           {answerOptions.map((option) => {
             const Icon = option.icon;
             return (
@@ -99,39 +97,6 @@ const QuestionCard = ({
           })}
         </div>
         
-        {selectedAnswer && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            transition={{ duration: 0.3 }}
-            className="mb-8"
-          >
-            <div className="mb-3">
-              <h3 className="text-lg font-medium mb-2">How important is this issue to you?</h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                Drag the slider to indicate how much weight this question should have in determining your matches.
-              </p>
-            </div>
-            
-            <div className="flex items-center gap-6">
-              <span className="text-sm">Less</span>
-              <Slider
-                value={[weight]}
-                min={1}
-                max={5}
-                step={1}
-                onValueChange={handleWeightChange}
-                className="flex-1"
-              />
-              <span className="text-sm">More</span>
-            </div>
-            
-            <div className="text-center mt-2 text-sm text-muted-foreground">
-              Importance: {weight === 1 ? "Very Low" : weight === 2 ? "Low" : weight === 3 ? "Medium" : weight === 4 ? "High" : "Very High"}
-            </div>
-          </motion.div>
-        )}
-        
         <div className="flex justify-between items-center">
           <Button
             variant="outline"
@@ -142,15 +107,25 @@ const QuestionCard = ({
             Previous
           </Button>
           
-          <Button
-            onClick={handleNext}
-            disabled={!selectedAnswer}
-            className={`transition-all duration-300 ${
-              !selectedAnswer ? "opacity-50" : "shadow-md hover:shadow-lg"
-            }`}
-          >
-            Next
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              onClick={handleSkip}
+              className="text-muted-foreground hover:text-foreground transition-all duration-200"
+            >
+              Skip Question
+            </Button>
+            
+            <Button
+              onClick={handleNext}
+              disabled={!selectedAnswer}
+              className={`transition-all duration-300 ${
+                !selectedAnswer ? "opacity-50" : "shadow-md hover:shadow-lg"
+              }`}
+            >
+              Next
+            </Button>
+          </div>
         </div>
       </Card>
     </motion.div>

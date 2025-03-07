@@ -86,7 +86,12 @@ const Questions = () => {
 
   // Handle submitting results
   const handleSubmitResults = () => {
-    if (userAnswers.length === questions.length) {
+    // Filter out skipped questions (no-answer) before submitting
+    const answeredQuestions = userAnswers.filter(
+      (answer) => answer.answer !== "no-answer"
+    );
+    
+    if (answeredQuestions.length > 0) {
       // Store user answers in session storage
       sessionStorage.setItem("userAnswers", JSON.stringify(userAnswers));
       
@@ -94,8 +99,8 @@ const Questions = () => {
       navigate("/results");
     } else {
       toast({
-        title: "Incomplete answers",
-        description: "Please answer all questions before proceeding.",
+        title: "No answers provided",
+        description: "Please answer at least one question before proceeding.",
         variant: "destructive",
       });
     }
@@ -147,9 +152,9 @@ const Questions = () => {
               className="w-full"
             >
               <div className="bg-white/80 dark:bg-black/80 backdrop-blur-md rounded-xl border-0 shadow-lg p-6 md:p-8">
-                <h2 className="text-2xl font-medium mb-2">Adjust Importance</h2>
+                <h2 className="text-2xl font-medium mb-2">How Important Are These Issues?</h2>
                 <p className="text-muted-foreground mb-6">
-                  Fine-tune how important each issue is to you. This helps us better match you with candidates.
+                  Adjust how much each issue matters to you. This helps us better match you with candidates.
                 </p>
                 
                 <div className="space-y-4 mb-8">
@@ -158,7 +163,8 @@ const Questions = () => {
                       (a) => a.questionId === question.id
                     );
                     
-                    return userAnswer ? (
+                    // Only show weight sliders for questions the user has answered (not skipped)
+                    return userAnswer && userAnswer.answer !== "no-answer" ? (
                       <WeightSlider
                         key={question.id}
                         questionId={question.id}
