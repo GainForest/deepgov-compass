@@ -102,7 +102,7 @@ const Results = () => {
           // Partial match with neutral
           score = 0.5;
         } else if (
-          candidateAnswer === "no-answer" ||
+          (candidateAnswer === "no-answer") ||
           (userAnswer.answer === "agree" && candidateAnswer === "disagree") ||
           (userAnswer.answer === "disagree" && candidateAnswer === "agree")
         ) {
