@@ -10,6 +10,7 @@ interface CandidateMatchProps {
   image: string;
   matchPercentage: number;
   rank: number;
+  onClick?: () => void;
 }
 
 const CandidateMatch = ({
@@ -18,6 +19,7 @@ const CandidateMatch = ({
   image,
   matchPercentage,
   rank,
+  onClick,
 }: CandidateMatchProps) => {
   // Determine color based on match percentage
   const getMatchColor = (percentage: number) => {
@@ -41,6 +43,8 @@ const CandidateMatch = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: rank * 0.1 }}
+      onClick={onClick}
+      className={onClick ? "cursor-pointer" : ""}
     >
       <Card className="overflow-hidden glass glass-hover border border-border/30 shadow-sm hover:shadow-md transition-all duration-300">
         <div className="p-6">
@@ -62,8 +66,7 @@ const CandidateMatch = ({
             </div>
             <Progress
               value={matchPercentage}
-              className="h-2"
-              indicatorClassName={`${getMatchColor(matchPercentage)}`}
+              className={`h-2 ${getMatchColor(matchPercentage)}`}
             />
           </div>
         </div>

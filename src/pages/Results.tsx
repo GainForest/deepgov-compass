@@ -3,8 +3,12 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Share2 } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ArrowLeft, Share2, BarChart3, LineChart, Users } from "lucide-react";
 import CandidateMatch from "@/components/CandidateMatch";
+import CandidateRadarChart from "@/components/CandidateRadarChart";
+import PoliticalCompass from "@/components/PoliticalCompass";
+import CandidateComparison from "@/components/CandidateComparison";
 import { candidates, questions } from "@/data/questionsData";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -27,6 +31,8 @@ interface CandidateResult {
 const Results = () => {
   const [matchResults, setMatchResults] = useState<CandidateResult[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedCandidate, setSelectedCandidate] = useState<number | null>(null);
+  const [userAnswerMap, setUserAnswerMap] = useState<{[key: number]: AnswerType}>({});
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -42,11 +48,23 @@ const Results = () => {
     
     const userAnswers: UserAnswer[] = JSON.parse(savedAnswers);
     
+    // Create a simple map of questionId to answer for visualizations
+    const answerMap: {[key: number]: AnswerType} = {};
+    userAnswers.forEach(answer => {
+      answerMap[answer.questionId] = answer.answer;
+    });
+    setUserAnswerMap(answerMap);
+    
     // Calculate match percentages
     const results = calculateMatches(userAnswers);
     
     // Sort by match percentage (descending)
     results.sort((a, b) => b.matchPercentage - a.matchPercentage);
+    
+    // Set the first candidate as selected for radar chart
+    if (results.length > 0) {
+      setSelectedCandidate(results[0].id);
+    }
     
     // Simulate loading delay for better UX
     setTimeout(() => {
@@ -85,8 +103,8 @@ const Results = () => {
           score = 0.5;
         } else if (
           candidateAnswer === "no-answer" ||
-          (userAnswer.answer === "agree" && candidateAnswer === "disagree") ||
-          (userAnswer.answer === "disagree" && candidateAnswer === "agree")
+          userAnswer.answer === "agree" && candidateAnswer === "disagree" ||
+          userAnswer.answer === "disagree" && candidateAnswer === "agree"
         ) {
           // Complete mismatch
           score = 0;
@@ -138,6 +156,23 @@ const Results = () => {
     navigate("/questions");
   };
 
+  const handleCandidateSelect = (candidateId: number) => {
+    setSelectedCandidate(candidateId);
+  };
+
+  // Get color for selected candidate
+  const getSelectedCandidateColor = () => {
+    const candidate = candidates.find(c => c.id === selectedCandidate);
+    if (!candidate) return "#3b82f6"; // Default blue
+    
+    switch (candidate.party) {
+      case "Progressive Party": return "#3b82f6"; // Blue
+      case "Moderate Alliance": return "#8b5cf6"; // Purple
+      case "Traditional Values": return "#ef4444"; // Red
+      default: return "#6b7280"; // Gray
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <motion.div
@@ -146,7 +181,7 @@ const Results = () => {
         className="absolute top-0 left-0 w-full h-full -z-10 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950"
       />
       
-      <main className="flex-1 container max-w-4xl mx-auto px-4 py-12">
+      <main className="flex-1 container max-w-6xl mx-auto px-4 py-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -168,20 +203,102 @@ const Results = () => {
             <p className="text-muted-foreground">Calculating your matches...</p>
           </div>
         ) : (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {matchResults.map((result, index) => (
-                <CandidateMatch
-                  key={result.id}
-                  name={result.name}
-                  party={result.party}
-                  image={result.image}
-                  matchPercentage={result.matchPercentage}
-                  rank={index}
-                />
-              ))}
-            </div>
-          </div>
+          <Tabs defaultValue="matches" className="space-y-6">
+            <TabsList className="grid w-full max-w-md mx-auto grid-cols-4">
+              <TabsTrigger value="matches" className="flex items-center gap-1">
+                <BarChart3 className="w-4 h-4" />
+                <span className="hidden sm:inline">Matches</span>
+              </TabsTrigger>
+              <TabsTrigger value="radar" className="flex items-center gap-1">
+                <LineChart className="w-4 h-4" />
+                <span className="hidden sm:inline">Positions</span>
+              </TabsTrigger>
+              <TabsTrigger value="compass" className="flex items-center gap-1">
+                <Users className="w-4 h-4" />
+                <span className="hidden sm:inline">Compass</span>
+              </TabsTrigger>
+              <TabsTrigger value="compare" className="flex items-center gap-1">
+                <Share2 className="w-4 h-4" />
+                <span className="hidden sm:inline">Compare</span>
+              </TabsTrigger>
+            </TabsList>
+            
+            {/* Matches Tab */}
+            <TabsContent value="matches" className="mt-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {matchResults.map((result, index) => (
+                  <CandidateMatch
+                    key={result.id}
+                    name={result.name}
+                    party={result.party}
+                    image={result.image}
+                    matchPercentage={result.matchPercentage}
+                    rank={index}
+                    onClick={() => handleCandidateSelect(result.id)}
+                  />
+                ))}
+              </div>
+            </TabsContent>
+            
+            {/* Radar Chart Tab */}
+            <TabsContent value="radar" className="mt-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="md:col-span-1">
+                  <div className="bg-white/80 dark:bg-black/80 backdrop-blur-sm p-4 rounded-lg">
+                    <h3 className="font-medium mb-3">Select Candidate</h3>
+                    <div className="space-y-3">
+                      {candidates.map((candidate) => {
+                        const isSelected = candidate.id === selectedCandidate;
+                        return (
+                          <div
+                            key={candidate.id}
+                            onClick={() => handleCandidateSelect(candidate.id)}
+                            className={`p-3 rounded-md cursor-pointer transition-colors flex items-center gap-3
+                              ${isSelected ? 'bg-primary/10 border border-primary/30' : 'hover:bg-secondary/50'}`}
+                          >
+                            <img 
+                              src={candidate.image} 
+                              alt={candidate.name}
+                              className="w-10 h-10 rounded-full object-cover"
+                            />
+                            <div>
+                              <div className="font-medium">{candidate.name}</div>
+                              <div className="text-xs text-muted-foreground">{candidate.party}</div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="md:col-span-2">
+                  {selectedCandidate && (
+                    <CandidateRadarChart
+                      candidateId={selectedCandidate}
+                      candidateName={candidates.find(c => c.id === selectedCandidate)?.name || ""}
+                      candidatePositions={candidates.find(c => c.id === selectedCandidate)?.positions || {}}
+                      candidateColor={getSelectedCandidateColor()}
+                      userAnswers={userAnswerMap}
+                    />
+                  )}
+                </div>
+              </div>
+            </TabsContent>
+            
+            {/* Political Compass Tab */}
+            <TabsContent value="compass" className="mt-6">
+              <PoliticalCompass 
+                userAnswers={userAnswerMap}
+                onCandidateClick={handleCandidateSelect}
+              />
+            </TabsContent>
+            
+            {/* Compare Tab */}
+            <TabsContent value="compare" className="mt-6">
+              <CandidateComparison userAnswers={userAnswerMap} />
+            </TabsContent>
+          </Tabs>
         )}
         
         <motion.div
