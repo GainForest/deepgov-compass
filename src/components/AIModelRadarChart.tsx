@@ -4,57 +4,53 @@ import { Card } from "@/components/ui/card";
 import { questions } from "@/data/questionsData";
 import { motion } from "framer-motion";
 
-interface CandidateRadarChartProps {
-  candidateId: number;
-  candidatePositions: { [key: number]: "agree" | "disagree" | "neutral" | "no-answer" };
-  candidateName: string;
-  candidateColor: string;
-  userAnswers?: { [key: number]: "agree" | "disagree" | "neutral" | "no-answer" };
+interface AIModelRadarChartProps {
+  modelId: number;
+  modelFeatures: { [key: number]: "high" | "medium" | "low" | "none" };
+  modelName: string;
+  modelColor: string;
+  userAnswers?: { [key: number]: "high" | "medium" | "low" | "none" };
 }
 
-const CandidateRadarChart = ({
-  candidateId,
-  candidatePositions,
-  candidateName,
-  candidateColor,
+const AIModelRadarChart = ({
+  modelId,
+  modelFeatures,
+  modelName,
+  modelColor,
   userAnswers,
-}: CandidateRadarChartProps) => {
+}: AIModelRadarChartProps) => {
   const [chartData, setChartData] = useState<any[]>([]);
   
   useEffect(() => {
     // Transform the data for the radar chart
     const transformedData = questions.map((question) => {
-      // Convert positions to numerical values: agree = 1, neutral = 0.5, disagree = 0, no-answer = 0
-      const getValueFromPosition = (position: string | undefined) => {
-        if (!position || position === "no-answer") return 0;
-        if (position === "agree") return 1;
-        if (position === "neutral") return 0.5;
-        return 0; // disagree
+      // Convert importance to numerical values: high = 1, medium = 0.66, low = 0.33, none = 0
+      const getValueFromImportance = (importance: string | undefined) => {
+        if (!importance || importance === "none") return 0;
+        if (importance === "high") return 1;
+        if (importance === "medium") return 0.66;
+        return 0.33; // low
       };
       
-      const candidateValue = getValueFromPosition(candidatePositions[question.id]);
+      const modelValue = getValueFromImportance(modelFeatures[question.id]);
       
       // Only include user value if it exists
-      const userValue = userAnswers ? getValueFromPosition(userAnswers[question.id]) : undefined;
+      const userValue = userAnswers ? getValueFromImportance(userAnswers[question.id]) : undefined;
       
       // Return data point for this question
       return {
         subject: question.text.length > 30 
           ? question.text.substring(0, 30) + "..." 
           : question.text,
-        candidate: candidateValue,
+        model: modelValue,
         user: userValue,
         fullMark: 1,
+        category: question.category
       };
     });
     
     setChartData(transformedData);
-  }, [candidateId, candidatePositions, userAnswers]);
-
-  // Debug output - uncomment to see if data is being generated
-  console.log("Chart data:", chartData);
-  console.log("Candidate positions:", candidatePositions);
-  console.log("User answers:", userAnswers);
+  }, [modelId, modelFeatures, userAnswers]);
 
   return (
     <motion.div
@@ -63,9 +59,8 @@ const CandidateRadarChart = ({
       className="w-full h-full"
     >
       <Card className="w-full h-full p-4 overflow-hidden">
-        <h3 className="text-lg font-medium mb-4">{candidateName}'s Political Positions</h3>
+        <h3 className="text-lg font-medium mb-4">{modelName}'s Feature Importance</h3>
         
-        {/* Explicitly set height and width */}
         <div style={{ width: '100%', height: '350px' }}>
           <ResponsiveContainer width="100%" height="100%">
             <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
@@ -74,16 +69,16 @@ const CandidateRadarChart = ({
               <PolarRadiusAxis angle={30} domain={[0, 1]} tick={false} />
               
               <Radar
-                name={candidateName}
-                dataKey="candidate"
-                stroke={candidateColor}
-                fill={candidateColor}
+                name={modelName}
+                dataKey="model"
+                stroke={modelColor}
+                fill={modelColor}
                 fillOpacity={0.5}
               />
               
               {userAnswers && (
                 <Radar
-                  name="Your Positions"
+                  name="Your Preferences"
                   dataKey="user"
                   stroke="#10b981"
                   fill="#10b981"
@@ -92,7 +87,13 @@ const CandidateRadarChart = ({
               )}
               
               <Legend />
-              <Tooltip />
+              <Tooltip formatter={(value) => {
+                const numValue = Number(value);
+                if (numValue >= 0.9) return "High Importance";
+                if (numValue >= 0.5) return "Medium Importance";
+                if (numValue >= 0.2) return "Low Importance";
+                return "Not Important";
+              }} />
             </RadarChart>
           </ResponsiveContainer>
         </div>
@@ -101,4 +102,4 @@ const CandidateRadarChart = ({
   );
 };
 
-export default CandidateRadarChart;
+export default AIModelRadarChart; 

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -84,6 +83,17 @@ const Questions = () => {
     );
   };
 
+  // Handle answer adjustment on weighting page
+  const handleWeightPageAnswerChange = (questionId: number, answer: AnswerType) => {
+    setUserAnswers((prev) =>
+      prev.map((userAnswer) =>
+        userAnswer.questionId === questionId
+          ? { ...userAnswer, answer }
+          : userAnswer
+      )
+    );
+  };
+
   // Handle submitting results
   const handleSubmitResults = () => {
     // Filter out skipped questions (no-answer) before submitting
@@ -157,7 +167,7 @@ const Questions = () => {
                   Adjust how much each issue matters to you. This helps us better match you with candidates.
                 </p>
                 
-                <div className="space-y-4 mb-8">
+                <div className="space-y-6 mb-8">
                   {questions.map((question) => {
                     const userAnswer = userAnswers.find(
                       (a) => a.questionId === question.id
@@ -165,13 +175,33 @@ const Questions = () => {
                     
                     // Only show weight sliders for questions the user has answered (not skipped)
                     return userAnswer && userAnswer.answer !== "no-answer" ? (
-                      <WeightSlider
-                        key={question.id}
-                        questionId={question.id}
-                        initialWeight={userAnswer.weight}
-                        onWeightChange={handleWeightChange}
-                        questionText={question.text}
-                      />
+                      <div key={question.id} className="bg-white/50 dark:bg-gray-800/50 p-4 rounded-lg">
+                        <p className="font-medium mb-3">{question.text}</p>
+                        
+                        {/* Display previous answer with edit options */}
+                        <div className="mb-4">
+                          <p className="text-sm text-muted-foreground mb-2">Your answer:</p>
+                          <div className="flex flex-wrap gap-2">
+                            {["agree", "neutral", "disagree"].map((option) => (
+                              <Button
+                                key={option}
+                                size="sm"
+                                variant={userAnswer.answer === option ? "default" : "outline"}
+                                onClick={() => handleWeightPageAnswerChange(question.id, option as AnswerType)}
+                              >
+                                {option.charAt(0).toUpperCase() + option.slice(1)}
+                              </Button>
+                            ))}
+                          </div>
+                        </div>
+                        
+                        <WeightSlider
+                          questionId={question.id}
+                          initialWeight={userAnswer.weight}
+                          onWeightChange={handleWeightChange}
+                          questionText="Importance:"
+                        />
+                      </div>
                     ) : null;
                   })}
                 </div>

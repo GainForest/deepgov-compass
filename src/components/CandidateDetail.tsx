@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -49,11 +48,19 @@ const CandidateDetail = ({ candidateId, onClose, userAnswers }: CandidateDetailP
         : candidate.party === "Moderate Alliance"
         ? ["Economic Growth", "Infrastructure", "Healthcare Access", "Bipartisanship"]
         : ["Tax Reduction", "National Security", "Traditional Values", "Limited Government"],
-      bio: candidate.party === "Progressive Party"
-        ? `${candidate.name} has been a lifelong advocate for progressive policies focusing on social justice, environmental protection, and economic equality. Beginning their career as a community organizer, they have worked to address systemic inequalities through grassroots initiatives and legislative action.`
-        : candidate.party === "Moderate Alliance"
-        ? `${candidate.name} believes in finding common ground to solve today's most pressing issues. Their centrist approach emphasizes practical solutions over partisan ideology, focusing on building consensus across political divides.`
-        : `${candidate.name} is committed to upholding traditional values and fiscal responsibility. With a background in business and community leadership, they advocate for limited government intervention and protection of individual liberties.`
+      bio: `${candidate.name} is a dedicated public servant with a strong record of ${
+        candidate.party === "Progressive Party" 
+          ? "advocating for social justice and environmental protection" 
+          : candidate.party === "Moderate Alliance"
+          ? "building consensus and practical solutions"
+          : "defending traditional values and economic freedom"
+      }. Throughout their career, they have focused on ${
+        candidate.party === "Progressive Party"
+          ? "expanding access to healthcare and education while fighting climate change"
+          : candidate.party === "Moderate Alliance"
+          ? "creating jobs and improving infrastructure while finding common ground"
+          : "supporting families and businesses while ensuring strong national security"
+      }.`
     };
   };
   
