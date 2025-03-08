@@ -10,6 +10,7 @@ import FeatureImportanceComparison from "@/components/FeatureImportanceCompariso
 import AIModelDetail from "@/components/AIModelDetail";
 import { aiModels, questions } from "@/data/questionsData";
 import { useToast } from "@/components/ui/use-toast";
+import { Spinner } from "@/components/ui/spinner";
 
 type FeatureImportance = "high" | "medium" | "low" | "none";
 
@@ -212,8 +213,8 @@ const Results = () => {
 
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-12">
-            <div className="w-12 h-12 rounded-full border-4 border-primary border-t-transparent animate-spin mb-4" />
-            <p className="text-muted-foreground">Calculating your matches...</p>
+            <Spinner size="lg" variant="primary" className="mb-4" />
+            <p className="text-muted-foreground animate-pulse">Calculating your matches...</p>
           </div>
         ) : (
           <Tabs defaultValue="matches" className="space-y-6">

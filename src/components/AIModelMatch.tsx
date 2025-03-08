@@ -45,10 +45,12 @@ const AIModelMatch = ({
       onClick={onClick}
       className={onClick ? "cursor-pointer" : ""}
     >
-      <Card className="overflow-hidden glass glass-hover border border-border/30 shadow-sm hover:shadow-md transition-all duration-300">
-        <div className="p-6">
+      <Card className="overflow-hidden glass glass-hover border border-primary/10 shadow-sm hover:shadow-md transition-all duration-300 relative">
+        <div className={`absolute top-0 left-0 right-0 h-1 ${getMatchColor(matchPercentage)} rounded-t-lg opacity-80`}></div>
+        
+        <div className="p-6 pt-8">
           <div className="flex items-center gap-4 mb-4">
-            <Avatar className="h-16 w-16 border-2 border-primary/10">
+            <Avatar className="h-16 w-16 border-2 border-primary/20 shadow-sm">
               <AvatarImage src={image} alt={name} />
               <AvatarFallback>{name.slice(0, 2)}</AvatarFallback>
             </Avatar>
@@ -65,7 +67,7 @@ const AIModelMatch = ({
             </div>
             <Progress
               value={matchPercentage}
-              className={`h-2 ${getMatchColor(matchPercentage)}`}
+              className={`h-2.5 rounded-full ${getMatchColor(matchPercentage)}`}
             />
           </div>
         </div>
