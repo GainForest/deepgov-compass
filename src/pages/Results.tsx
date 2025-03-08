@@ -52,7 +52,17 @@ const Results = () => {
     // Create a simple map of questionId to answer for visualizations
     const answerMap: {[key: number]: FeatureImportance} = {};
     userAnswers.forEach(answer => {
-      answerMap[answer.questionId] = answer.answer;
+      // Map from AnswerType to FeatureImportance
+      if (answer.answer === "agree") {
+        answerMap[answer.questionId] = "high";
+      } else if (answer.answer === "neutral") {
+        answerMap[answer.questionId] = "medium";
+      } else if (answer.answer === "disagree") {
+        answerMap[answer.questionId] = "low";
+      } else {
+        // no-answer
+        answerMap[answer.questionId] = "none";
+      }
     });
     setUserAnswerMap(answerMap);
     
@@ -85,27 +95,39 @@ const Results = () => {
         const modelImportance = model.featureImportance[userAnswer.questionId];
         const weight = userAnswer.weight;
         
-        // Skip questions with "none" from user
-        if (userAnswer.answer === "none") {
+        // Skip questions with "no-answer" from user
+        if (userAnswer.answer === "no-answer") {
           return;
+        }
+        
+        // Convert user answer to feature importance
+        let userImportance: FeatureImportance;
+        if (userAnswer.answer === "agree") {
+          userImportance = "high";
+        } else if (userAnswer.answer === "neutral") {
+          userImportance = "medium";
+        } else if (userAnswer.answer === "disagree") {
+          userImportance = "low";
+        } else {
+          userImportance = "none";
         }
         
         // Match scores based on importance combinations
         let score = 0;
         
-        if (userAnswer.answer === modelImportance) {
+        if (userImportance === modelImportance) {
           // Perfect match
           score = 1;
         } else if (
-          (userAnswer.answer === "medium" && modelImportance !== "none") ||
-          (modelImportance === "medium" && userAnswer.answer !== "none")
+          (userImportance === "medium" && modelImportance !== "none") ||
+          (modelImportance === "medium" && userImportance !== "none")
         ) {
           // Partial match with medium
           score = 0.5;
         } else if (
           (modelImportance === "none") ||
-          (userAnswer.answer === "high" && modelImportance === "low") ||
-          (userAnswer.answer === "low" && modelImportance === "high")
+          (userImportance === "high" && modelImportance === "low") ||
+          (userImportance === "low" && modelImportance === "high")
         ) {
           // Complete mismatch
           score = 0;
