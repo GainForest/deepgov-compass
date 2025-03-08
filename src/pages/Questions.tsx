@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import QuestionCard from "@/components/QuestionCard";
 import ProgressBar from "@/components/ProgressBar";
-import WeightSlider from "@/components/WeightSlider";
+import WeightMultiplier from "@/components/WeightMultiplier";
 import { questions } from "@/data/questionsData";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -195,7 +195,7 @@ const Questions = () => {
                           </div>
                         </div>
                         
-                        <WeightSlider
+                        <WeightMultiplier
                           questionId={question.id}
                           initialWeight={userAnswer.weight}
                           onWeightChange={handleWeightChange}
