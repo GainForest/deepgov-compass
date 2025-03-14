@@ -13,6 +13,7 @@ export interface AIModel {
   approach: string;
   image: string;
   featureImportance: { [key: number]: FeatureImportance };
+  learnMoreUrl: string;
 }
 
 // Questions about public goods funding priorities
@@ -76,6 +77,7 @@ export const aiModels: AIModel[] = [
     name: "EquityMax",
     approach: "Equity-Centered Approach",
     image: "https://avatar-canvas-jet.vercel.app/_next/image?url=%2Fthumbnail%2Favatar-1.png&w=3840&q=75",
+    learnMoreUrl: "https://avatar-canvas-jet.vercel.app/avatar/equity",
     featureImportance: {
       1: "medium",
       2: "low",
@@ -94,6 +96,7 @@ export const aiModels: AIModel[] = [
     name: "EfficientAlloc",
     approach: "Efficiency-Optimized Approach",
     image: "https://avatar-canvas-jet.vercel.app/_next/image?url=%2Fthumbnail%2Favatar-4.png&w=3840&q=75",
+    learnMoreUrl: "https://avatar-canvas-jet.vercel.app/avatar/efficiency",
     featureImportance: {
       1: "medium",
       2: "high",
@@ -112,6 +115,7 @@ export const aiModels: AIModel[] = [
     name: "SustainFocus",
     approach: "Sustainability-Driven Approach",
     image: "https://avatar-canvas-jet.vercel.app/_next/image?url=%2Fthumbnail%2Fpanda.png&w=3840&q=75",
+    learnMoreUrl: "https://avatar-canvas-jet.vercel.app/avatar/sustainability",
     featureImportance: {
       1: "low",
       2: "medium",
@@ -130,6 +134,7 @@ export const aiModels: AIModel[] = [
     name: "CommunityCentric",
     approach: "Community-Governed Approach",
     image: "https://avatar-canvas-jet.vercel.app/_next/image?url=%2Fthumbnail%2Favatar-2.png&w=3840&q=75",
+    learnMoreUrl: "https://avatar-canvas-jet.vercel.app/avatar/community",
     featureImportance: {
       1: "high",
       2: "low",
@@ -148,6 +153,7 @@ export const aiModels: AIModel[] = [
     name: "InnovationEngine",
     approach: "Innovation-Focused Approach",
     image: "https://avatar-canvas-jet.vercel.app/_next/image?url=%2Fthumbnail%2Favatar-3.png&w=3840&q=75",
+    learnMoreUrl: "https://avatar-canvas-jet.vercel.app/avatar/inovation",
     featureImportance: {
       1: "low",
       2: "medium",

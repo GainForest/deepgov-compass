@@ -2,12 +2,15 @@ import { motion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { ExternalLink } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface AIModelMatchProps {
   name: string;
   approach: string;
   image: string;
   matchPercentage: number;
+  learnMoreUrl: string;
   rank: number;
   onClick?: () => void;
 }
@@ -17,6 +20,7 @@ const AIModelMatch = ({
   approach,
   image,
   matchPercentage,
+  learnMoreUrl,
   rank,
   onClick,
 }: AIModelMatchProps) => {
@@ -35,6 +39,12 @@ const AIModelMatch = ({
     if (percentage >= 40) return "Moderate Alignment";
     if (percentage >= 20) return "Poor Alignment";
     return "Very Poor Alignment";
+  };
+
+  // Handle opening the learn more URL without triggering the onClick event
+  const handleLearnMoreClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent triggering the parent's onClick
+    window.open(learnMoreUrl, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -69,6 +79,26 @@ const AIModelMatch = ({
               value={matchPercentage}
               className={`h-2.5 rounded-full ${getMatchColor(matchPercentage)}`}
             />
+          </div>
+          
+          <div className="flex justify-between items-center mt-4 pt-3 border-t border-border/30">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={onClick}
+              className="text-sm font-medium text-primary"
+            >
+              View Details
+            </Button>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleLearnMoreClick}
+              className="flex items-center gap-1.5 text-sm font-medium text-primary"
+            >
+              Learn More <ExternalLink className="h-3.5 w-3.5" />
+            </Button>
           </div>
         </div>
       </Card>

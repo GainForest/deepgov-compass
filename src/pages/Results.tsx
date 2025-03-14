@@ -26,6 +26,7 @@ interface AIModelResult {
   approach: string;
   image: string;
   matchPercentage: number;
+  learnMoreUrl: string;
 }
 
 const Results = () => {
@@ -148,6 +149,7 @@ const Results = () => {
         name: model.name,
         approach: model.approach,
         image: model.image,
+        learnMoreUrl: model.learnMoreUrl,
         matchPercentage,
       };
     });
@@ -265,6 +267,7 @@ const Results = () => {
                     approach={result.approach}
                     image={result.image}
                     matchPercentage={result.matchPercentage}
+                    learnMoreUrl={result.learnMoreUrl}
                     rank={index}
                     onClick={() => handleModelSelect(result.id)}
                   />
