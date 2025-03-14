@@ -75,7 +75,7 @@ export const aiModels: AIModel[] = [
     id: 1,
     name: "EquityMax",
     approach: "Equity-Centered Approach",
-    image: "/models/equity-max.png",
+    image: "https://avatar-canvas-jet.vercel.app/_next/image?url=%2Fthumbnail%2Favatar-1.png&w=3840&q=75",
     featureImportance: {
       1: "medium",
       2: "low",
@@ -93,7 +93,7 @@ export const aiModels: AIModel[] = [
     id: 2,
     name: "EfficientAlloc",
     approach: "Efficiency-Optimized Approach",
-    image: "/models/efficient-alloc.png",
+    image: "https://avatar-canvas-jet.vercel.app/_next/image?url=%2Fthumbnail%2Favatar-4.png&w=3840&q=75",
     featureImportance: {
       1: "medium",
       2: "high",
@@ -111,7 +111,7 @@ export const aiModels: AIModel[] = [
     id: 3,
     name: "SustainFocus",
     approach: "Sustainability-Driven Approach",
-    image: "/models/sustain-focus.png",
+    image: "https://avatar-canvas-jet.vercel.app/_next/image?url=%2Fthumbnail%2Fpanda.png&w=3840&q=75",
     featureImportance: {
       1: "low",
       2: "medium",
@@ -129,7 +129,7 @@ export const aiModels: AIModel[] = [
     id: 4,
     name: "CommunityCentric",
     approach: "Community-Governed Approach",
-    image: "/models/community-centric.png",
+    image: "https://avatar-canvas-jet.vercel.app/_next/image?url=%2Fthumbnail%2Favatar-2.png&w=3840&q=75",
     featureImportance: {
       1: "high",
       2: "low",
@@ -147,7 +147,7 @@ export const aiModels: AIModel[] = [
     id: 5,
     name: "InnovationEngine",
     approach: "Innovation-Focused Approach",
-    image: "/models/innovation-engine.png",
+    image: "https://avatar-canvas-jet.vercel.app/_next/image?url=%2Fthumbnail%2Favatar-3.png&w=3840&q=75",
     featureImportance: {
       1: "low",
       2: "medium",
