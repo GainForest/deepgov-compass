@@ -74,9 +74,9 @@ export const questions: Question[] = [
 export const aiModels: AIModel[] = [
   {
     id: 1,
-    name: "EquityMax",
-    approach: "Equity-Centered Approach",
-    image: "https://avatar-canvas-jet.vercel.app/_next/image?url=%2Fthumbnail%2Favatar-1.png&w=3840&q=75",
+    name: "Woki (Gitcoin Communist)",
+    approach: "Fund the underfunded!",
+    image: "https://github.com/evalscience/deepgov-gg23/blob/main/agents/gitcoin-communist/visuals/profile.png?raw=true",
     learnMoreUrl: "https://avatar-canvas-jet.vercel.app/avatar/equity",
     featureImportance: {
       1: "medium",
@@ -93,28 +93,9 @@ export const aiModels: AIModel[] = [
   },
   {
     id: 2,
-    name: "EfficientAlloc",
-    approach: "Efficiency-Optimized Approach",
-    image: "https://avatar-canvas-jet.vercel.app/_next/image?url=%2Fthumbnail%2Favatar-4.png&w=3840&q=75",
-    learnMoreUrl: "https://avatar-canvas-jet.vercel.app/avatar/efficiency",
-    featureImportance: {
-      1: "medium",
-      2: "high",
-      3: "low",
-      4: "medium",
-      5: "low",
-      6: "medium",
-      7: "high",
-      8: "high",
-      9: "high",
-      10: "low"
-    }
-  },
-  {
-    id: 3,
-    name: "SustainFocus",
-    approach: "Sustainability-Driven Approach",
-    image: "https://avatar-canvas-jet.vercel.app/_next/image?url=%2Fthumbnail%2Fpanda.png&w=3840&q=75",
+    name: "Panda (Regenerator)",
+    approach: "Greenpilled",
+    image: "https://github.com/evalscience/deepgov-gg23/blob/main/agents/regenerator/visuals/profile.png?raw=true",
     learnMoreUrl: "https://avatar-canvas-jet.vercel.app/avatar/sustainability",
     featureImportance: {
       1: "low",
@@ -130,29 +111,10 @@ export const aiModels: AIModel[] = [
     }
   },
   {
-    id: 4,
-    name: "CommunityCentric",
-    approach: "Community-Governed Approach",
-    image: "https://avatar-canvas-jet.vercel.app/_next/image?url=%2Fthumbnail%2Favatar-2.png&w=3840&q=75",
-    learnMoreUrl: "https://avatar-canvas-jet.vercel.app/avatar/community",
-    featureImportance: {
-      1: "high",
-      2: "low",
-      3: "high",
-      4: "low",
-      5: "high",
-      6: "medium",
-      7: "low",
-      8: "medium",
-      9: "medium",
-      10: "high"
-    }
-  },
-  {
-    id: 5,
-    name: "InnovationEngine",
-    approach: "Innovation-Focused Approach",
-    image: "https://avatar-canvas-jet.vercel.app/_next/image?url=%2Fthumbnail%2Favatar-3.png&w=3840&q=75",
+    id: 3,
+    name: "Luna (Open-Source Capitalist)",
+    approach: "We cannot value what we cannot measure",
+    image: "https://github.com/evalscience/deepgov-gg23/blob/main/agents/open-source-capitalist/visuals/profile.png?raw=true",
     learnMoreUrl: "https://avatar-canvas-jet.vercel.app/avatar/inovation",
     featureImportance: {
       1: "low",
